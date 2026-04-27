@@ -140,40 +140,47 @@
 
 <script>
 const BASE = window.location.origin;
+const API_PATH = window.location.pathname.split('/public')[0] || '';
 
 const PRESETS = {
   login: {
-    method: 'POST', url: '/rest-api/api/auth/login',
+    method: 'POST', url: API_PATH + '/api/auth/login',
     body: '{\n  "email": "admin@aclc.edu",\n  "password": "your-password"\n}'
   },
   getBseStudents: {
-    method: 'GET', url: '/rest-api/api/bse-students', body: ''
+    method: 'GET', url: API_PATH + '/api/bse-students', body: ''
   },
-getBsisStudents: {
-    method: 'GET', url: '/rest-api/api/bsis-students', body: ''
+  getBsisStudents: {
+    method: 'GET', url: API_PATH + '/api/bsis-students', body: ''
+  },
+  getBseStudents: {
+    method: 'GET', url: API_PATH + '/api/bse-students', body: ''
+  },
+  getBsisStudents: {
+    method: 'GET', url: API_PATH + '/api/bsis-students', body: ''
   },
   searchBseStudents: {
-    method: 'GET', url: '/rest-api/api/bse-students?search=Mac', body: ''
+    method: 'GET', url: API_PATH + '/api/bse-students?search=Mac', body: ''
   },
   searchBsisStudents: {
-    method: 'GET', url: '/rest-api/api/bsis-students?search=Meon', body: ''
+    method: 'GET', url: API_PATH + '/api/bsis-students?search=Meon', body: ''
   },
   getAdmins: {
-    method: 'GET', url: '/rest-api/api/admins', body: ''
+    method: 'GET', url: API_PATH + '/api/admins', body: ''
   },
   createBseStudent: {
-    method: 'POST', url: '/rest-api/api/bse-students',
+    method: 'POST', url: API_PATH + '/api/bse-students',
     body: '{\n  "student_id": "BSE-2024-001",\n  "name": "Kuya Mac",\n  "program": "BSE",\n  "year_level": "1st Year",\n  "gmail": "kuya.mac@gmail.com"\n}'
   },
   getRemoved: {
-    method: 'GET', url: '/rest-api/api/removed-students', body: ''
+    method: 'GET', url: API_PATH + '/api/removed-students', body: ''
   },
   createBsisStudent: {
-    method: 'POST', url: '/rest-api/api/bsis-students',
+    method: 'POST', url: API_PATH + '/api/bsis-students',
     body: '{\n  "student_id": "BSIS-2024-001",\n  "name": "Kuya Meon",\n  "program": "BSIS",\n  "year_level": "1st Year",\n  "gmail": "kuya.meon@gmail.com"\n}'
   },
   logout: {
-    method: 'POST', url: '/rest-api/api/auth/logout', body: ''
+    method: 'POST', url: API_PATH + '/api/auth/logout', body: ''
   },
 };
 
