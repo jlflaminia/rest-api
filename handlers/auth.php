@@ -12,13 +12,13 @@ function handleAuthLogin(PDO $pdo, array $body): void
         respond(400, null, 'email and password are required');
     }
 
-    // Fetch user by email
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
+    // Fetch admin by email
+    $stmt = $pdo->prepare('SELECT * FROM admins WHERE email = :email LIMIT 1');
     $stmt->execute([':email' => strtolower(trim($body['email']))]);
-    $user = $stmt->fetch();
+    $admin = $stmt->fetch();
 
     // Use password_verify to check bcrypt hash (timing-safe)
-    if (!$user || !password_verify($body['password'], $user['password'])) {
+    if (!$admin || !password_verify($body['password'], $admin['password_hash'])) {
         respond(401, null, 'Invalid credentials');
     }
 
@@ -31,7 +31,7 @@ function handleAuthLogin(PDO $pdo, array $body): void
          VALUES (:uid, :token, DATE_ADD(NOW(), INTERVAL 24 HOUR))'
     );
     $stmt->execute([
-        ':uid'   => $user['id'],
+        ':uid'   => $admin['id'],
         ':token' => $token,
     ]);
 
@@ -40,10 +40,11 @@ function handleAuthLogin(PDO $pdo, array $body): void
         'token_type' => 'Bearer',
         'expires_in' => '24 hours',
         'user'       => [
-            'id'    => (int) $user['id'],
-            'name'  => $user['name'],
-            'email' => $user['email'],
-            'role'  => $user['role'],
+            'id'       => (int) $admin['id'],
+            'username' => $admin['username'],
+            'full_name' => $admin['full_name'],
+            'email'    => $admin['email'],
+            'role'     => $admin['role'],
         ],
     ]);
 }

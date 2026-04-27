@@ -6,7 +6,7 @@
  */
 
 /**
- * Require a valid Bearer token. Returns the authenticated user row.
+ * Require a valid Bearer token. Returns the authenticated admin row.
  * Calls respond(401) and exits if authentication fails.
  */
 function requireAuth(PDO $pdo): array
@@ -26,21 +26,21 @@ function requireAuth(PDO $pdo): array
     $rawToken = substr($auth, 7);
 
     $stmt = $pdo->prepare(
-        'SELECT t.user_id, u.name, u.email, u.role
+        'SELECT t.user_id, a.username, a.full_name, a.email, a.role
            FROM api_tokens t
-           JOIN users u ON u.id = t.user_id
+           JOIN admins a ON a.id = t.user_id
           WHERE t.token      = :token
             AND t.expires_at > NOW()
           LIMIT 1'
     );
     $stmt->execute([':token' => $rawToken]);
-    $user = $stmt->fetch();
+    $admin = $stmt->fetch();
 
-    if (!$user) {
+    if (!$admin) {
         respond(401, null, 'Invalid or expired token');
     }
 
-    return $user;
+    return $admin;
 }
 
 /**
@@ -48,9 +48,9 @@ function requireAuth(PDO $pdo): array
  */
 function requireAdmin(PDO $pdo): array
 {
-    $user = requireAuth($pdo);
-    if ($user['role'] !== 'admin') {
+    $admin = requireAuth($pdo);
+    if ($admin['role'] !== 'admin' && $admin['role'] !== 'superadmin') {
         respond(403, null, 'Admin access required');
     }
-    return $user;
+    return $admin;
 }
